@@ -1,2 +1,4 @@
 llama-cpp-python==0.2.71
-python-dotenv==1.0.1 
+python-dotenv==1.0.1
+python-telegram-bot==21.1.1
+logging==0.4.9.6
