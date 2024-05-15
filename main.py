@@ -26,6 +26,7 @@ def main() -> None:
     application.add_handler(CommandHandler("clear", clear))
     application.add_handler(MessageHandler(
         filters.TEXT & ~filters.COMMAND, reply))
+
     application.run_polling(allowed_updates=Update.ALL_TYPES)
 
 

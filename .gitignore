@@ -1,6 +1,6 @@
 scratch
 .env
-models
+models/*
 venv
 TODO
 __pycache__

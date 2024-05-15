@@ -8,22 +8,11 @@ from functools import cache
 
 
 @cache
-def get_model_path():
-    load_dotenv()
-    model_path = os.environ["MODEL_PATH"]
-    if 'nt' not in os.name:
-        if os.path.exists('/.dockerenv'):
-            model_path = 'models' + '/' + os.path.basename('model_path')
-        else:
-            # ensure the path matches unix standard
-            model_path = os.path.abspath(model_path)
-    return model_path
-
-
-@cache
 def get_llm():
+    load_dotenv()
+    model = os.environ["MODEL"]
     return Llama(
-        model_path=get_model_path(),
+        model_path=os.path(f"./{model}"),
         chat_format="llama-3",
         n_gpu_layers=int(os.environ["N_GPU_LAYERS"])
     )
@@ -39,10 +28,8 @@ def set_system_context():
     global chat_context
     with open("prompt.txt", "r") as prompt:
         prompt = prompt.read().replace('\n', '')
-        print(prompt)
         chat_context = [{"role": "system",
                          "content": prompt}]
-        return
 
 
 def auth(func):
