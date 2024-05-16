@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
-from utils import set_system_context, help, reply, clear, get_llm
+from utils import set_system_context, help, reply, clear, get_llm, error_handler
 
 
 load_dotenv()
@@ -22,8 +22,9 @@ def main() -> None:
     get_llm()
     logging.info("Model loaded")
 
-
     application = Application.builder().token(telegram_token).build()
+
+    application.add_error_handler(error_handler)
 
     application.add_handler(CommandHandler("help", help))
     application.add_handler(CommandHandler("clear", clear))

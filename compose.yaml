@@ -6,11 +6,12 @@ services:
     volumes: 
       - ./models:/baymax/models
     command: bash -c "cd /baymax && python main.py"
+    # vvv comment this section out if you don't want docker to access GPU resources vvv
     deploy:
       resources:
           reservations:
             devices:
-              - driver: nvidia
+              - driver: nvidia # update to match gpu
                 count: 1
                 capabilities: [gpu]
 
