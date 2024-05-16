@@ -4,21 +4,23 @@ import logging
 from llama_cpp import Llama
 from dotenv import load_dotenv
 import os
-from functools import cache
+from functools import lru_cache
 
 
-@cache
+@lru_cache
 def get_llm():
     load_dotenv()
     model = os.environ["MODEL"]
+    n_ctx = int(os.environ["MAX_CONTEXT"])
     return Llama(
-        model_path=os.path(f"./{model}"),
+        model_path=f"models/{model}",
         chat_format="llama-3",
+        n_ctx=n_ctx,
         n_gpu_layers=int(os.environ["N_GPU_LAYERS"])
     )
 
 
-@cache
+@lru_cache
 def get_chat_id():
     load_dotenv()
     return int(os.environ["TELEGRAM_CHAT_ID"])
