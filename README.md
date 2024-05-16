@@ -5,13 +5,14 @@
 
 ## 2. Find a model
 1. Download a .gguf file from a model of your choice from [Huggingface](https://huggingface.co). [This repository](https://huggingface.co/TheBloke/Llama-2-7B-GGUF/tree/main) has a good collection of ready-to-go model files.
-    a. [You can also prepare your own model](C:\\Users\\berre\\Downloads\\llama-2-7b.Q2_K.gguf).
+    
+    a. [You can also prepare your own model](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#prepare-and-quantize).
 2. Copy the model into the models folder
 3. Enter the name of the model in `.env`
 
 
 ## 3. Set up Telegram bot
-1. Download Telegram
+1. Download [Telegram](https://desktop.telegram.org/)
 2. Send the following messages to @BotFather on Telegram to get your token
     1. `/start`
     2. `/newbot`
