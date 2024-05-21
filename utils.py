@@ -31,6 +31,10 @@ def get_chat_id():
     return int(os.environ["TELEGRAM_CHAT_ID"])
 
 
+async def startup(self):
+    await self.bot.sendMessage(get_chat_id(), 'Baymax ready to assist.')
+
+
 def set_system_context():
     global chat_context
     with open("prompt.txt", "r") as prompt:
