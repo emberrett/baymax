@@ -4,7 +4,7 @@
 `git clone https://github.com/emberrett/baymax`
 
 ## 2. Find a model
-1. Download a .gguf file from a model of your choice from [Huggingface](https://huggingface.co). [This repository](https://huggingface.co/TheBloke/Llama-2-7B-GGUF/tree/main) has a good collection of ready-to-go model files.
+1. Download a .gguf file from a model of your choice from [Huggingface](https://huggingface.co). [This repository](https://huggingface.co/TheBloke/Llama-2-7B-GGUF/tree/main) has a good collection of ready-to-go model files. I suggest using `llama-2-7b.Q4_K_M.gguf`.
     
     a. [You can also prepare your own model](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#prepare-and-quantize).
 2. Copy the model into the models folder
