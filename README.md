@@ -49,3 +49,6 @@ Note: You can also just run the `main.py` locally without spinning up a containe
 Type `/help` for commands.
 
 If you would like to edit the prompt the chatbot begins with, edit `prompt.txt`.
+
+
+For running container with Nvidia GPU access on Windows, see [this guide](https://saturncloud.io/blog/how-to-use-gpu-from-a-docker-container-a-guide-for-data-scientists-and-software-engineers/)

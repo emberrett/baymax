@@ -3,16 +3,12 @@ services:
     build: .
     env_file:
       - path: ./.env
-    volumes: 
-      - ./models:/baymax/models
     command: bash -c "cd /baymax && python main.py"
-    # vvv comment this section out if you don't want docker to access GPU resources vvv
+    ## modify or remove the below config to suit your system
     deploy:
       resources:
-          reservations:
-            devices:
-              - driver: nvidia # update to match gpu
-                count: 1
-                capabilities: [gpu]
-
-
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]

@@ -18,7 +18,7 @@ def get_llm():
     model = os.environ["MODEL"]
     n_ctx = int(os.environ["MAX_CONTEXT"])
     return Llama(
-        model_path=f"models/{model}",
+        model_path=f"/baymax/models/{model}",
         chat_format="llama-3",
         n_ctx=n_ctx,
         n_gpu_layers=int(os.environ["N_GPU_LAYERS"])
