@@ -4,3 +4,4 @@ models/*
 venv
 TODO
 __pycache__
+config.json

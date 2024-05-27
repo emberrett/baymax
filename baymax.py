@@ -7,28 +7,61 @@ import html
 import traceback
 import json
 import re
+import json
+from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 
 class Baymax():
     def __init__(
             self,
-            chat_id: int,
-            model: Llama,
+            system_prompt: str,
+            chat_id: str,
+            token: str,
+            llm_kwargs: dict,
+            chat_completion_kwargs: dict
     ):
+        logging.basicConfig(level=logging.INFO)
+        self.chat: list[dict]
+        self.system_prompt = system_prompt
+        # passed to Llama object
+        self.llm_kwargs = llm_kwargs
+        # passed to Llama.create_chat_completion method
+        self.chat_completion_kwargs = chat_completion_kwargs
+        self.reset_system_context()
         self.chat_id = chat_id
-        self.model = model
-        self.context: list[dict]
-        self.system_prompt: str
-        self.set_system_context()
+        self.token = token
+        self.llm = self.get_llm()
+        self.application = Application.builder().token(self.token).build()
+        self.set_application_args()
 
-    def set_system_context(self):
-        with open("prompt.txt", "r") as prompt:
-            prompt = prompt.read().replace('\n', '')
-            self.context = [{"role": "system",
-                            "content": prompt}]
+    def __call__(self):
+        self.application.run_polling(allowed_updates=Update.ALL_TYPES)
 
-    def get_chat_id(self):
-        return self.get_chat_id
+    async def startup(self, *args):
+        await self.application.bot.sendMessage(self.chat_id, 'Baymax ready to assist.')
+
+    def set_application_args(self):
+        self.application.post_init = self.startup
+
+        self.application.add_error_handler(self.error_handler)
+
+        self.application.add_handler(
+            handler=CommandHandler("help", self.help))
+        self.application.add_handler(
+            handler=CommandHandler("clear", self.clear))
+        self.application.add_handler(handler=MessageHandler(
+            filters.TEXT & ~filters.COMMAND, self.reply))
+
+    def get_llm(self) -> Llama:
+        logging.info("Initializing model...")
+        return Llama(
+            **self.llm_kwargs
+        )
+
+    def reset_system_context(self):
+        logging.info("Restoring chat to system prompt.")
+        self.chat = [{"role": "system",
+                      "content": self.system_prompt}]
 
     def auth(func):
         def wrapper(self, *args, **kwargs):
@@ -71,14 +104,16 @@ class Baymax():
     @auth
     async def clear(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.info("Clearing chat context...")
-        self.set_system_context()
+        self.reset_system_context()
         await update.message.reply_text("Chat context cleared.")
 
     @auth
     async def reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-        logging.info("User requested ")
-        self.context.append({"role": "user", "content": update.message.text})
-        output = self.model.create_chat_completion(self.context, temperature=0.5, repeat_penalty=1.2, top_p=0.95)
-        content = output["choices"][0]["message"]["content"]
-        self.context.append({"role": "assistant", "content": content})
-        await update.message.reply_text(content)
+        logging.info(f"User: {update.message.text}")
+        self.chat.append({"role": "user", "content": update.message.text})
+        chat_completion = self.llm.create_chat_completion(
+            self.chat, **self.chat_completion_kwargs)
+        assistant_response = chat_completion["choices"][0]["message"]["content"]
+        self.chat.append({"role": "assistant", "content": assistant_response})
+        logging.info(f"Assistant: {assistant_response}")
+        await update.message.reply_text(assistant_response, parse_mode="HTML")

@@ -25,20 +25,13 @@
 
 ## 4. Create .env file
 1. Create an `.env` file at the root directory
-2. Fill it out with the following:
-```
-# from step 2. Can be `.bin` or `.gguf` file.
-MODEL='your_model_file.bin' 
+2. Type `MODEL='your_model_file.bin'` into the `.env` file 
 
-# from step 3
-TELEGRAM_TOKEN=<telegram_token> 
-TELEGRAM_CHAT_ID=<telegram_chat_id>
+## 5. Create `.config` file
+1. This file contains your telegram info and will determine how your model will run. See `example_config.config` for reference.
 
-# determines how much work the GPU does running the model. -1 = all GPU, 0 = no GPU, 1+ = some GPU
-# see `compose.yaml` for dedicating GPU to docker
-N_GPU_LAYERS=-1 
-MAX_CONTEXT=2048 # max context that can be retained for a chat 
-```
+See [llama-cpp-python](https://llama-cpp-python.readthedocs.io/en/latest/api-reference/) docs for more info on model and chat completion args.
+
 ## 4. Build/Run Docker image. Must have [Docker](https://docs.docker.com/engine/install/)
 1. Run `docker compose up -d` from root of repo directory
 
@@ -47,8 +40,5 @@ Note: You can also just run the `main.py` locally without spinning up a containe
 
 ## You are now ready to message your personal AI chatbot via Telegram.
 Type `/help` for commands.
-
-If you would like to edit the prompt the chatbot begins with, edit `prompt.txt`.
-
 
 For running container with Nvidia GPU access on Windows, see [this guide](https://saturncloud.io/blog/how-to-use-gpu-from-a-docker-container-a-guide-for-data-scientists-and-software-engineers/)

@@ -1,51 +1,27 @@
-import logging
 import os
 from dotenv import load_dotenv
-from telegram import Update
-from telegram.ext import Application, CommandHandler, MessageHandler, filters
 from baymax import Baymax
-from llama_cpp import Llama
-
-
-logging.getLogger("httpx").setLevel(logging.INFO)
-
-logger = logging.getLogger(__name__)
+import json
 
 
 def main() -> None:
 
     load_dotenv()
-    telegram_token = os.environ["TELEGRAM_TOKEN"]
-    model = os.environ["MODEL"]
-    n_ctx = int(os.environ["MAX_CONTEXT"])
-    chat_id = int(os.environ["TELEGRAM_CHAT_ID"])
 
-    async def startup(self):
-        await self.bot.sendMessage(chat_id, 'Baymax ready to assist.')
+    with open('config.json', 'r') as config_file:
+        config = json.load(config_file)
 
-    llm = Llama(
-        model_path=f"models/{model}",
-        chat_format="llama-3",
-        n_ctx=n_ctx,
-        n_gpu_layers=int(os.environ["N_GPU_LAYERS"])
+    llm_kwargs = config["model"]
+    llm_kwargs["model_path"] = f"models/{os.environ['MODEL']}"
+
+    baymax = Baymax(
+        system_prompt=config["system_prompt"],
+        chat_id=config["telegram"]["chat_id"],
+        token=config["telegram"]["token"],
+        llm_kwargs=config["model"],
+        chat_completion_kwargs=config["chat_completion"]
     )
-
-    baymax = Baymax(chat_id, llm)
-
-    logging.info("Model loaded")
-
-    application = Application.builder().token(telegram_token).build()
-
-    application.post_init = startup
-
-    application.add_error_handler(baymax.error_handler)
-
-    application.add_handler(handler=CommandHandler("help", baymax.help))
-    application.add_handler(handler=CommandHandler("clear", baymax.clear))
-    application.add_handler(handler=MessageHandler(
-        filters.TEXT & ~filters.COMMAND, baymax.reply))
-
-    application.run_polling(allowed_updates=Update.ALL_TYPES)
+    baymax()
 
 
 if __name__ == "__main__":
