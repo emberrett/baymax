@@ -3,16 +3,15 @@ import os
 from llama_cpp import Llama
 
 
-with open('config.json', 'r') as config_file:
+with open('model_config.json', 'r') as config_file:
     config = json.load(config_file)
 
 llm_kwargs = config["model"]
-llm_kwargs["model_path"] = f"models/{os.environ['MODEL']}"
 
 llm = Llama(**llm_kwargs)
 
 base_context = [{"role": "system",
-                         "content": config["system_prompt"]}]
+                         "content": config["initial_prompt"]}]
 
 context = base_context
 
@@ -20,6 +19,7 @@ context = base_context
 user_messages = [
     "Hi I'm Ethan",
     "What's my name?",
+    "what's your name?",
     "Help me write a song about birds",
     "Make the song shorter",
     "What's 2 + 2?",

@@ -4,9 +4,8 @@ FROM python:3.8.19-slim
 WORKDIR "/baymax"
 COPY requirements.txt requirements.txt
 COPY main.py main.py
-COPY utils.py utils.py
-COPY prompt.txt prompt.txt
-COPY config.json config.json
+COPY baymax.py baymax.py
+COPY model_config.json model_config.json
 
 ADD models /baymax/models/
 

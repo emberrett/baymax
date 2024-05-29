@@ -1,10 +1,10 @@
-# Baymax: A locally ran, accessible-anywhere chatbot.
+# Baymax: A locally-ran, highly-customizable, accessible-anywhere chatbot.
 
 ## 1. Clone repository
 `git clone https://github.com/emberrett/baymax`
 
 ## 2. Find a model
-1. Download a .gguf file from a model of your choice from [Huggingface](https://huggingface.co). [This repository](https://huggingface.co/TheBloke/Llama-2-7B-GGUF/tree/main) has a good collection of ready-to-go model files. I suggest using `llama-2-7b.Q4_K_M.gguf`.
+1. Download a .gguf file from a model of your choice from [Huggingface](https://huggingface.co). [This repository](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.2-GGUF/tree/main) has a good collection of ready-to-go model files. I suggest using `llama-2-7b.Q4_K_M.gguf`.
     
     a. [You can also prepare your own model](https://github.com/ggerganov/llama.cpp?tab=readme-ov-file#prepare-and-quantize).
 2. Copy the model into the models folder
@@ -23,16 +23,23 @@
     2. Open https://api.telegram.org/bot<your_token>/getUpdates in a browser
     3. Copy your chat ID
 
-## 4. Create .env file
-1. Create an `.env` file at the root directory
-2. Type `MODEL='your_model_file.bin'` into the `.env` file 
+4. Create  `.env` file with the following values:
+```
+TELEGRAM_TOKEN=<your_telegram_token>
+TELEGRAM_CHAT_ID=<your_telegram_chat_id>
 
-## 5. Create `.config` file
-1. This file contains your telegram info and will determine how your model will run. See `example_config.config` for reference.
+```
 
-See [llama-cpp-python](https://llama-cpp-python.readthedocs.io/en/latest/api-reference/) docs for more info on model and chat completion args.
+## 5. Add model path `model_config.json`
+1. This file determine how your model will run. You MUST enter the file path of the model in this format: `model/<model_file_name>`.
 
-## 4. Build/Run Docker image. Must have [Docker](https://docs.docker.com/engine/install/)
+You can also use this file to further customize how the model behaves.
+
+The `model` object processes valid args from [this class](https://llama-cpp-python.readthedocs.io/en/latest/api-reference/#llama_cpp.Llama)
+
+The `chat_completion` object processes valid args from [this method](https://llama-cpp-python.readthedocs.io/en/latest/api-reference/#llama_cpp.Llama.create_chat_completion)
+
+## 6. Build/Run Docker image. Must have [Docker](https://docs.docker.com/engine/install/)
 1. Run `docker compose up -d` from root of repo directory
 
 Note: You can also just run the `main.py` locally without spinning up a container. Be sure to run `pip install -r requirements.txt` first.

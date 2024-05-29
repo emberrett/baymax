@@ -14,7 +14,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 class Baymax():
     def __init__(
             self,
-            system_prompt: str,
+            intial_prompt: str,
             chat_id: str,
             token: str,
             llm_kwargs: dict,
@@ -22,13 +22,13 @@ class Baymax():
     ):
         logging.basicConfig(level=logging.INFO)
         self.chat: list[dict]
-        self.system_prompt = system_prompt
+        self.intial_prompt = intial_prompt
         # passed to Llama object
         self.llm_kwargs = llm_kwargs
         # passed to Llama.create_chat_completion method
         self.chat_completion_kwargs = chat_completion_kwargs
         self.reset_system_context()
-        self.chat_id = chat_id
+        self.chat_id = chat_id if type(chat_id) is int else int(chat_id)
         self.token = token
         self.llm = self.get_llm()
         self.application = Application.builder().token(self.token).build()
@@ -61,7 +61,7 @@ class Baymax():
     def reset_system_context(self):
         logging.info("Restoring chat to system prompt.")
         self.chat = [{"role": "system",
-                      "content": self.system_prompt}]
+                      "content": self.intial_prompt}]
 
     def auth(func):
         def wrapper(self, *args, **kwargs):
@@ -111,9 +111,9 @@ class Baymax():
     async def reply(self, update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         logging.info(f"User: {update.message.text}")
         self.chat.append({"role": "user", "content": update.message.text})
-        chat_completion = self.llm.create_chat_completion(
+        completion_output = self.llm.create_chat_completion(
             self.chat, **self.chat_completion_kwargs)
-        assistant_response = chat_completion["choices"][0]["message"]["content"]
+        assistant_response = completion_output["choices"][0]["message"]["content"]
         self.chat.append({"role": "assistant", "content": assistant_response})
         logging.info(f"Assistant: {assistant_response}")
-        await update.message.reply_text(assistant_response, parse_mode="HTML")
+        await update.message.reply_text(assistant_response)
