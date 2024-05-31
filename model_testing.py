@@ -10,16 +10,18 @@ llm_kwargs = config["model"]
 
 llm = Llama(**llm_kwargs)
 
-base_context = [{"role": "system",
+base_context = [{"role": "user",
                          "content": config["initial_prompt"]}]
+
+
 
 context = base_context
 
 
 user_messages = [
+    "what's your name?",
     "Hi I'm Ethan",
     "What's my name?",
-    "what's your name?",
     "Help me write a song about birds",
     "Make the song shorter",
     "What's 2 + 2?",

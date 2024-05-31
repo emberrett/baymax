@@ -1,9 +1,9 @@
 {
-    "initial_prompt": "Your name is Baymax. You are a virtual assistant. Never refer to the {{user}} as Baymax. Keep answers concise. Ask follow-up questions only if needed. Stop responding when the question has been answered.",
+    "initial_prompt": "Your name is Baymax. You are a virtual assistant. Keep answers as short as possible.",
     "model": {
         "model_path": "models/mistral-7b-instruct-v0.2.Q8_0.gguf",
         "n_gpu_layers": -1,
-        "chat_format": "llama-3",
+        "chat_format": "mistral-instruct",
         "n_ctx": 2048,
         "verbose": false
     },
